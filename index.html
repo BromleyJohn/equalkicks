@@ -1,1 +1,42 @@
-EQUAL KICKS
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="airtable.browser.js"></script>
+    </head>
+    <body>
+        <h1>Bands</h1>
+        <div id="divBands"></div>
+    </body>
+
+
+    <script>
+	
+	var bands = document.getElementById('divBands');
+	
+	var Airtable = require("airtable");
+    var base = new Airtable({apiKey: "patG3UOguQUAAy9eu.934568df628b5694a71f21944cc17397292a49b6198b65f116d12c845f79a929"}).base("appykvaUwMwVOlhpz",);
+
+    base('tblBands').select({
+        // Selecting the first 3 records in Grid view:
+        //maxRecords: 3,
+        view: "grdBandNames"
+    }).eachPage(function page(records, fetchNextPage) {
+       // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+            console.log('Band Name:', record.get('bandName'));
+		    bands.innerHTML = bands.innerHTML + record.get('bandName') + "</br>"
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) { console.error(err); return; }
+    
+	});
+
+    </script>
+</html>
